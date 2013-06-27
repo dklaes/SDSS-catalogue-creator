@@ -6,10 +6,10 @@
 # program docstring:
 """
 SCRIPT NAME:
-    SDSSR7_objects.py - retrieve stars/galaxies from the SLOAN database
+    SDSS_dataquery.py - retrieve stars/galaxies from the SLOAN database
 
 SYNOPSIS:
-    SDSSR7_objects.py CATALOG STARS|GALZ|GALPHOT ramin ramax decmin decmax
+    SDSS_dataquery.py CATALOG STARS|GALZ|GALPHOT ramin ramax decmin decmax
 
 DESCRIPTION:
     The script retrieves SLOAN objects within the rectangle defined
@@ -43,7 +43,7 @@ REMARKS:
     - The script is for Python 2.x!
 
 EXAMPLES:
-    ./SDSSR7_objects.py DR9 STARS 212.0 213.0 51.0 52.0
+    ./SDSS_dataquery.py DR9 STARS 212.0 213.0 51.0 52.0
 
     This command retrieves stellar sources in the one square degree
     area around ra=212.5, dec=51.5 from SDSS-DR9.
