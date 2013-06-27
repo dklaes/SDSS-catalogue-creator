@@ -9,14 +9,16 @@ SCRIPT NAME:
     SDSSR7_objects.py - retrieve stars/galaxies from the SLOAN database
 
 SYNOPSIS:
-    SDSSR7_objects.py STARS|GALZ|GALPHOT ramin ramax decmin decmax
+    SDSSR7_objects.py CATALOG STARS|GALZ|GALPHOT ramin ramax decmin decmax
 
 DESCRIPTION:
     The script retrieves SLOAN objects within the rectangle defined
     by the ramin/ramax and decmin/decmax coordinate (to be provided
     in decimal degrees) pairs.
-    The first argument determines which objects to retrieve:
+    The first argument determines which objects to retrieve from where:
 
+    - CATALOG: Choosing where to get the data from. Up to now SDSS-DR8,
+               SDSS-DR9 and STRIPE82 are supported.
     - STARS: stellar sources; retrieved are objectID, Ra, Dec, 
              Ra Error, Dec Error, PSF Magnitudes and errors in u, g, r, i, z
     - GALZ: galaxies with spectroscopic redshifts; retrieved are:
@@ -41,13 +43,14 @@ REMARKS:
     - The script is for Python 2.x!
 
 EXAMPLES:
-    ./SDSSR7_objects.py STARS 212.0 213.0 51.0 52.0
+    ./SDSSR7_objects.py DR9 STARS 212.0 213.0 51.0 52.0
 
     This command retrieves stellar sources in the one square degree
-    area around ra=212.5, dec=51.5
+    area around ra=212.5, dec=51.5 from SDSS-DR9.
     
 AUTHOR:
     Thomas Erben         (terben@astro.uni-bonn.de)
+    Dominik Klaes        (dklaes@astro.uni-bonn.de)
 
 """
 
@@ -60,15 +63,24 @@ import sqlcl
 # ============
 
 # sanity check on the number of command line arguments:
-if len(sys.argv) != 6:
+if len(sys.argv) != 7:
     print __doc__
     sys.exit(1)
 
-objects_mode = sys.argv[1]
-ramin = float(sys.argv[2])
-ramax = float(sys.argv[3])
-decmin = float(sys.argv[4])
-decmax = float(sys.argv[5])
+catalog = sys.argv[1]
+objects_mode = sys.argv[2]
+ramin = float(sys.argv[3])
+ramax = float(sys.argv[4])
+decmin = float(sys.argv[5])
+decmax = float(sys.argv[6])
+
+if catalog == "DR8":
+    public_url='http://skyserver.sdss3.org/dr8/en/tools/search/x_sql.asp'
+elif catalog == "DR9":
+    public_url='http://skyserver.sdss3.org/dr9/en/tools/search/x_sql.asp'
+elif catalog == "STRIPE82":
+    public_url='http://cas.sdss.org/public/en/tools/search/x_sql.asp'
+
 
 # define the SQL query string for the SDSS database; dependent
 # on the required object types:
@@ -118,7 +130,7 @@ if objects_mode == "GALPHOT" :
              " AND flags & dbo.fPhotoFlags('BLENDED') = 0 "
 
 # query the SDSS database:
-lines = sqlcl.query(query).readlines()
+lines = sqlcl.query(query,public_url).readlines()
 if len(lines) == 8:
     print "An error occured during your request; probably"
     print "the selected area is too large"

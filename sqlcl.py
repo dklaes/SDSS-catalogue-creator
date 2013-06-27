@@ -14,11 +14,11 @@ Options:
 formats = ['csv','xml','html']
 
 astro_url='http://cas.sdss.org/astro/en/tools/search/x_sql.asp'
-public_url='http://skyserver.sdss3.org/dr8/en/tools/search/x_sql.asp'
-public_url='http://skyserver.sdss3.org/dr9/en/tools/search/x_sql.asp'
+#public_url='http://skyserver.sdss3.org/dr8/en/tools/search/x_sql.asp'
+#public_url='http://skyserver.sdss3.org/dr9/en/tools/search/x_sql.asp'
 #public_url='http://cas.sdss.org/public/en/tools/search/x_sql.asp'	#STRIPE82
 
-default_url=public_url
+#default_url=public_url
 default_fmt='csv'
 
 def usage(status, msg=''):
@@ -36,7 +36,7 @@ def filtercomment(sql):
         fsql += line.split('--')[0] + ' ' + os.linesep;
     return fsql
 
-def query(sql,url=default_url,fmt=default_fmt):
+def query(sql,url,fmt=default_fmt):
     "Run query and return file object"
     import urllib
     fsql = filtercomment(sql)
