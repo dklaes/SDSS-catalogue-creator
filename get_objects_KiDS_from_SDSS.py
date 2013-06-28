@@ -15,10 +15,12 @@
 # $3	directory where to save catalogue
 # $4	name of the final catalog
 # $5	filter
+# $6	camera
 
 #Importing packages
 import os
 import sys
+import numpy as np
 import astropy
 import astropy.io as io
 import astropy.io.fits as fits
@@ -27,15 +29,27 @@ import astropy.io.fits as fits
 # Reading command line arguments
 PATH = sys.argv[1]
 #TYPES = sys.argv[2]
-TYPES = ['STANDARD', 'SCIENCE']
+TYPES = ['SCIENCE']
 SAVETOPATH = sys.argv[3]
 CATALOG = sys.argv[4]
 #FILTER = sys.argv[5]
 #FILTERS = ['r_SDSS', 'g_SDSS', 'u_SDSS', 'i_SDSS', 'z_SDSS']
 FILTERS = ['r_SDSS']
+#CAMERA = sys.argv[6]
+CAMERA = 'OMEGACAM@VST'
 
 # Some configuration
 GETSDSS="/vol/science01/scratch/dklaes/data/SDSSR9_query/SDSSR7_objects.py"
+
+CAMERAS = np.loadtxt("cameras.ini", delimiter="\t", dtype={'names': ('THELI_name', 'RA_name', 'DEC_name', 'FOV_x_deg', 'FOV_y_deg'), 'formats': ('S50', 'S10', 'S10', 'S50', 'S50')})
+
+RA=''
+DEC=''
+for i in range(len(CAMERAS)):
+  if CAMERAS[i][0] == CAMERA:
+    RA=CAMERAS[i][1]
+    DEC=CAMERAS[i][2]
+
 
 PWD=os.getcwd()
 
@@ -54,7 +68,8 @@ for i in range(len(FILTERS)):
       
       for l in range(len(FILES)):
 	file = fits.open(FILES[l])
-	print(file[0].header['AIRMASS'])
+	print(file[0].header[RA])
+	print(file[0].header[DEC])
 	file.close()
       
       os.chdir(PATH + "/" + FILTERS[i])
