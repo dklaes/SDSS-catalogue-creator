@@ -61,6 +61,7 @@ elif DEC == '':
 PWD=os.getcwd()
 array = []
 
+# Creating list with all images and paths.
 for i in range(len(FILTERS)):
   os.chdir(PATH + "/" + FILTERS[i])
   LIST = os.listdir(os.getcwd())
@@ -80,7 +81,7 @@ for i in range(len(FILTERS)):
       os.chdir(PATH + "/" + FILTERS[i])
       
       
-# later for RA, DEC extraction
+# Extract RA and DEC from all images.
 array2 = np.array([])
 for i in range(len(array)):
   file = fits.open(array[i])
@@ -98,13 +99,7 @@ RAMAX = np.array(array2[:,0]+FOVX/2.0)
 DECMIN = np.array(array2[:,1]-FOVY/2.0)
 DECMAX = np.array(array2[:,1]+FOVY/2.0)
 
-print(RAMIN)
-
 DECMIN = np.where(DECMIN<-90.0, (-180.0-DECMIN, RAMIN+180.0, RAMAX+180.0), DECMIN)
 DECMAX = np.where(DECMAX>90.0, (180.0-DECMAX, RAMIN+180.0, RAMAX+180.0), DECMAX)
 RAMIN = np.where(RAMIN<0, RAMIN+360.0, RAMIN)
 RAMAX = np.where(RAMIN>360.0, RAMIN-360.0, RAMAX)
-
-
-
-print(RAMIN)
