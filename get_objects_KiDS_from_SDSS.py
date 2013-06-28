@@ -49,11 +49,17 @@ for i in range(len(CAMERAS)):
   if CAMERAS[i][0] == CAMERA:
     RA = CAMERAS[i][1]
     DEC = CAMERAS[i][2]
-    FOVX = CAMERAS[i][3]
-    FOVY = CAMERAS[i][4]
+    FOVX = float(CAMERAS[i][3])
+    FOVY = float(CAMERAS[i][4])
+
+if RA == '':
+  print("No RA key word for " + CAMERA + " not found!")
+elif DEC == '':
+  print("No DEC key word for " + CAMERA + " not found!")
 
 
 PWD=os.getcwd()
+array = []
 
 for i in range(len(FILTERS)):
   os.chdir(PATH + "/" + FILTERS[i])
@@ -69,9 +75,37 @@ for i in range(len(FILTERS)):
       print("\n")
       
       for l in range(len(FILES)):
-	file = fits.open(FILES[l])
-	print(file[0].header[RA])
-	print(file[0].header[DEC])
-	file.close()
+	array.append(os.getcwd() + "/" + FILES[l])
       
       os.chdir(PATH + "/" + FILTERS[i])
+      
+      
+# later for RA, DEC extraction
+array2 = np.array([])
+for i in range(len(array)):
+  file = fits.open(array[i])
+  RAVAL = float(file[0].header[RA])
+  DECVAL = float(file[0].header[DEC])
+  file.close()
+  array2 = np.append(array2,[RAVAL,DECVAL])
+array2 = array2.reshape((-1,2))
+
+print(array2[:,0])
+
+# Calculating 
+RAMIN = np.array(array2[:,0]-FOVX/2.0)
+RAMAX = np.array(array2[:,0]+FOVX/2.0)
+DECMIN = np.array(array2[:,1]-FOVY/2.0)
+DECMAX = np.array(array2[:,1]+FOVY/2.0)
+
+print(RAMIN)
+
+DECMIN = np.where(DECMIN<-90.0, (-180.0-DECMIN, RAMIN+180.0, RAMAX+180.0), DECMIN)
+DECMAX = np.where(DECMAX>90.0, (180.0-DECMAX, RAMIN+180.0, RAMAX+180.0), DECMAX)
+
+RAMIN = np.where(RAMIN<0, RAMIN+360.0, RAMIN)
+RAMAX = np.where(RAMIN>360.0, RAMIN-360.0, RAMAX)
+
+
+
+print(RAMIN)
