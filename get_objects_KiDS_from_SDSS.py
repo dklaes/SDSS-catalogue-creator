@@ -47,8 +47,10 @@ RA=''
 DEC=''
 for i in range(len(CAMERAS)):
   if CAMERAS[i][0] == CAMERA:
-    RA=CAMERAS[i][1]
-    DEC=CAMERAS[i][2]
+    RA = CAMERAS[i][1]
+    DEC = CAMERAS[i][2]
+    FOVX = CAMERAS[i][3]
+    FOVY = CAMERAS[i][4]
 
 
 PWD=os.getcwd()
