@@ -91,13 +91,21 @@ for i in range(len(array)):
   array2 = np.append(array2,[RAVAL,DECVAL])
 array2 = array2.reshape((-1,2))
 
-print(array2[:,0])
+def unique(a):
+    order = np.lexsort(a.T)
+    a = a[order]
+    diff = np.diff(a, axis=0)
+    ui = np.ones(len(a), 'bool')
+    ui[1:] = (diff != 0).any(axis=1) 
+    return a[ui]
+    
+array3 = unique(array2)
 
-# Calculating 
-RAMIN = np.array(array2[:,0]-FOVX/2.0)
-RAMAX = np.array(array2[:,0]+FOVX/2.0)
-DECMIN = np.array(array2[:,1]-FOVY/2.0)
-DECMAX = np.array(array2[:,1]+FOVY/2.0)
+# Calculating rectangle
+RAMIN = np.array(array3[:,0]-FOVX/2.0)
+RAMAX = np.array(array3[:,0]+FOVX/2.0)
+DECMIN = np.array(array3[:,1]-FOVY/2.0)
+DECMAX = np.array(array3[:,1]+FOVY/2.0)
 
 DECMIN = np.where(DECMIN<-90.0, (-180.0-DECMIN, RAMIN+180.0, RAMAX+180.0), DECMIN)
 DECMAX = np.where(DECMAX>90.0, (180.0-DECMAX, RAMIN+180.0, RAMAX+180.0), DECMAX)
