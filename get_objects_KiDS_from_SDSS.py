@@ -28,7 +28,7 @@ import gzip
 import time
 
 # Importing paths for external programs
-os.popen(". ./progs.ini")
+#os.popen(". ./progs.ini")
 
 # Reading command line arguments
 PATH = sys.argv[1]
@@ -157,8 +157,8 @@ print("Getting rid of doubled objects...")
 os.popen("awk '{if (a[$0]==0) {a[$0]=1; print}}' " + PWD + "/catalog.tmp | sed -ne '/^[[:digit:]]/p' | awk '{print $0, 'SDSSDR9'}' > " + PWD + "/catalog.tmp2")
 
 print("Converting asc to ldac...")
-os.popen("${P_ASCTOLDAC} -i " + PWD + "/catalog.tmp2 -o " + PWD + "/catalog.tmp3 -c " + PWD + "/asctoldac_tmp.conf -t STDTAB -b 1 -n 'sdss ldac cat'")
-os.popen("${P_LDACCALC} -i " + PWD + "/catalog.tmp3 -o " + PWD + "/catalog.tmp4 -t STDTAB \
+os.popen(". ./progs.ini && ${P_ASCTOLDAC} -i " + PWD + "/catalog.tmp2 -o " + PWD + "/catalog.tmp3 -c " + PWD + "/asctoldac_tmp.conf -t STDTAB -b 1 -n 'sdss ldac cat'")
+os.popen(". ./progs.ini && ${P_LDACCALC} -i " + PWD + "/catalog.tmp3 -o " + PWD + "/catalog.tmp4 -t STDTAB \
 			-c '(umag-gmag);' -n umg '' -k FLOAT \
 			-c '(gmag-rmag);' -n gmr '' -k FLOAT \
 			-c '(rmag-imag);' -n rmi '' -k FLOAT \
@@ -168,7 +168,7 @@ os.popen("${P_LDACCALC} -i " + PWD + "/catalog.tmp3 -o " + PWD + "/catalog.tmp4 
 			-c '(sqrt((rerr*rerr)+(ierr*ierr)));' -n rmierr '' -k FLOAT \
 			-c '(sqrt((ierr*ierr)+(zerr*zerr)));' -n imzerr '' -k FLOAT")
 
-os.popen("${P_LDACADDKEY} -i " + PWD + "/catalog.tmp4 -o " + PWD + "/" + CATALOG + ".cat -t STDTAB \
+os.popen(". ./progs.ini && ${P_LDACADDKEY} -i " + PWD + "/catalog.tmp4 -o " + PWD + "/" + CATALOG + ".cat -t STDTAB \
 			-k Epoch 2000.0 FLOAT '' n 0 SHORT '' m 0 SHORT '' A_WCS 0.0005 FLOAT '' \
 			B_WCS 0.0005 FLOAT '' THETAWCS 0.0 FLOAT '' Flag 0 SHORT ''")
 
@@ -176,7 +176,7 @@ print("Creating skycat file...")
 SKYCATCONFIG=open(PWD + "/skycat.conf", "r")
 SKYCAT = [i for i in SKYCATCONFIG.readlines()]
 SKYCAT = map(lambda s: s.strip(), SKYCAT)
-os.popen("${P_LDACTOSKYCAT} -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k " + SKYCAT[1] + " -l " + SKYCAT[3] + " > " + PWD + "/" + CATALOG + ".skycat")
+os.popen(". ./progs.ini && ${P_LDACTOSKYCAT} -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k " + SKYCAT[1] + " -l " + SKYCAT[3] + " > " + PWD + "/" + CATALOG + ".skycat")
 
 print("Creating ASCII file...")
 ASCIICONFIG=open(PWD + "/ASCII.conf", "r")
@@ -186,7 +186,7 @@ ASCII = map(lambda s: s.strip(), ASCII)
 ASCII2 = str(ASCII[1])
 for i in range(len(ASCII)-2):
   ASCII2 = str(ASCII2 + " " + ASCII[i+2])
-os.popen("${P_LDACTOASC} -s -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k " + str(ASCII2[::]) + " > " + PWD + "/" + CATALOG + ".asc")
+os.popen(". ./progs.ini && ${P_LDACTOASC} -s -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k " + str(ASCII2[::]) + " > " + PWD + "/" + CATALOG + ".asc")
 
 
 # Now create one single compressed gzip file from all raw catalog datasets.
