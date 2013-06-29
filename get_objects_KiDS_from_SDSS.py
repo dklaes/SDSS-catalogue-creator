@@ -127,4 +127,23 @@ for i in range(len(array4)):
 # Downloading catalogs
 for i in range(len(array4)):
   print("Downloading area " + str(array4[i][0]) + " " + str(array4[i][1]) + " " + str(array4[i][2]) + " " + str(array4[i][3]) + " ...")
-  os.popen("python " + PWD + "/SDSS_dataquery.py DR8 STARS " + str(array4[i][0]) + " " + str(array4[i][1]) + " " + str(array4[i][2]) + " " + str(array4[i][3]) + " > " + PWD + "/test.txt" + str(i))
+  os.popen("python " + PWD + "/SDSS_dataquery.py DR8 STARS " + str(array4[i][0]) + " " + str(array4[i][1]) + " " + str(array4[i][2]) + " " + str(array4[i][3]) + " > " + PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1])+ "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv")
+
+# Create asctoldac config file
+ENTRIES = np.loadtxt(PWD + "/entries.conf", delimiter="\t", dtype={'names': ('SDSS_name', 'select', 'catalog', 'catalog_name', 'TTYPE', 'HTYPE', 'COMM', 'UNIT', 'DEPTH'), 'formats': ('S50', 'S5', 'S5', 'S10', 'S10', 'S10', 'S50', 'S10', 'i3')})
+
+config = open(PWD + "/asctoldac_tmp.conf","w")
+config.write("VERBOSE = DEBUG\n")
+config.write("#\n")
+
+for i in range(len(ENTRIES)):
+  if ENTRIES[i][2] == "True":
+    config.write("COL_NAME = " + ENTRIES[i][3] + "\n")
+    config.write("COL_TTYPE = " + ENTRIES[i][4] + "\n")
+    config.write("COL_HTYPE = " + ENTRIES[i][5] + "\n")
+    config.write("COL_COMM = " + ENTRIES[i][6] + "\n")
+    config.write("COL_UNIT = " + ENTRIES[i][7] + "\n")
+    config.write("COL_DEPTH = " + str(ENTRIES[i][8]) + "\n")
+    config.write("#\n")
+
+config.close()
