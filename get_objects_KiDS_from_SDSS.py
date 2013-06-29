@@ -145,5 +145,47 @@ for i in range(len(ENTRIES)):
     config.write("COL_UNIT = " + ENTRIES[i][7] + "\n")
     config.write("COL_DEPTH = " + str(ENTRIES[i][8]) + "\n")
     config.write("#\n")
-
 config.close()
+
+os.popen("cat " + PWD + "/catalog_*.csv > " + PWD + "/catalog.tmp")
+print("Getting rid of doubled objects...")
+ 
+os.popen("awk '{if (a[$0]==0) {a[$0]=1; print}}' " + PWD + "/catalog.tmp | sed -ne '/^[[:digit:]]/p' | awk '{print $0, 'SDSSDR9'}' > " + PWD + "/catalog.tmp2")
+
+print("Converting asc to ldac...")
+os.popen("asctoldac -i " + PWD + "/catalog.tmp2 -o " + PWD + "/catalog.tmp3 -c " + PWD + "/asctoldac_tmp.conf -t STDTAB -b 1 -n 'sdss ldac cat'")
+os.popen("ldaccalc -i " + PWD + "/catalog.tmp3 -o " + PWD + "/catalog.tmp4 -t STDTAB \
+			-c '(umag-gmag);' -n umg '' -k FLOAT \
+			-c '(gmag-rmag);' -n gmr '' -k FLOAT \
+			-c '(rmag-imag);' -n rmi '' -k FLOAT \
+			-c '(imag-zmag);' -n imz '' -k FLOAT \
+			-c '(sqrt((uerr*uerr)+(gerr*gerr)));' -n umgerr '' -k FLOAT \
+			-c '(sqrt((gerr*gerr)+(rerr*rerr)));' -n gmrerr '' -k FLOAT \
+			-c '(sqrt((rerr*rerr)+(ierr*ierr)));' -n rmierr '' -k FLOAT \
+			-c '(sqrt((ierr*ierr)+(zerr*zerr)));' -n imzerr '' -k FLOAT")
+
+os.popen("ldacaddkey -i " + PWD + "/catalog.tmp4 -o " + PWD + "/" + CATALOG + ".cat -t STDTAB \
+			-k Epoch 2000.0 FLOAT '' n 0 SHORT '' m 0 SHORT '' A_WCS 0.0005 FLOAT '' \
+			B_WCS 0.0005 FLOAT '' THETAWCS 0.0 FLOAT '' Flag 0 SHORT ''")
+
+print("Creating skycat file...")
+SKYCATCONFIG=open(PWD + "/skycat.conf", "r")
+SKYCAT = [i for i in SKYCATCONFIG.readlines()]
+SKYCAT = map(lambda s: s.strip(), SKYCAT)
+os.popen("ldactoskycat -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k " + SKYCAT[1] + " -l " + SKYCAT[3] + " > " + PWD + "/" + CATALOG + ".skycat")
+
+print("Creating ASCII file...")
+ASCIICONFIG=open(PWD + "/ASCII.conf", "r")
+ASCII = [i for i in ASCIICONFIG.readlines()]
+ASCII = map(lambda s: s.strip(), ASCII)
+
+ASCII2 = str(ASCII[1])
+for i in range(len(ASCII)-2):
+  ASCII2 = str(ASCII2 + " " + ASCII[i+2])
+os.popen("ldactoasc -s -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k " + str(ASCII2[::]) + " > " + PWD + "/" + CATALOG + ".asc")
+
+os.remove(PATH + "/catalog.tmp")
+os.remove(PATH + "/catalog.tmp2")
+os.remove(PATH + "/catalog.tmp3")
+os.remove(PATH + "/catalog.tmp4")
+os.remove(PATH + "/asctoldac_tmp.conf")
