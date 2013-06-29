@@ -30,7 +30,7 @@ import time
 # Reading command line arguments
 PATH = sys.argv[1]
 #TYPES = sys.argv[2]
-TYPES = ['SCIENCE', 'STANDARD', 'SCIENCESHORT']
+TYPES = ['STANDARD']
 SAVETOPATH = sys.argv[3]
 CATALOG = sys.argv[4]
 #FILTER = sys.argv[5]
@@ -86,6 +86,7 @@ for i in range(len(FILTERS)):
 # Extract RA and DEC from all images.
 array2 = np.array([])
 for i in range(len(array)):
+  print(str(i+1) + "/" + str(len(array)))
   file = fits.open(array[i])
   RAVAL = float(file[0].header[RA])
   DECVAL = float(file[0].header[DEC])
