@@ -33,8 +33,8 @@ PROGS = np.loadtxt(PWD + "/progs.ini", delimiter="=", dtype={'names': ('variabel
 for i in range(len(PROGS)):
   if PROGS[i][0] == "P_ASCTOLDAC":
     P_ASCTOLDAC = PROGS[i][1]
-  if PROGS[i][0] == "P_ASCTOSKYCAT":
-    P_ASCTOSKYCAT = PROGS[i][1]
+  if PROGS[i][0] == "P_LDACTOSKYCAT":
+    P_LDACTOSKYCAT = PROGS[i][1]
   if PROGS[i][0] == "P_LDACCALC":
     P_LDACCALC = PROGS[i][1]
   if PROGS[i][0] == "P_LDACFILTER":
