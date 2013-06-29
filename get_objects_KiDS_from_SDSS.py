@@ -25,6 +25,7 @@ import astropy
 import astropy.io as io
 import astropy.io.fits as fits
 import gzip
+import time
 
 # Reading command line arguments
 PATH = sys.argv[1]
@@ -75,8 +76,6 @@ for i in range(len(FILTERS)):
     for k in range(len(TYPES)):
       os.chdir(os.getcwd() + "/" + LIST[j] + "/" + TYPES[k] + "_" + FILTERS[i] + "/ORIGINALS/")
       FILES = os.listdir(os.getcwd())
-      print(os.listdir(os.getcwd()))
-      print("\n")
       
       for l in range(len(FILES)):
 	array.append(os.getcwd() + "/" + FILES[l])
@@ -126,8 +125,9 @@ for i in range(len(array4)):
 
 # Downloading catalogs
 for i in range(len(array4)):
-  print("Downloading area " + str(array4[i][0]) + " " + str(array4[i][1]) + " " + str(array4[i][2]) + " " + str(array4[i][3]) + " ...")
+  print("Downloading area " + str(i+1) + "/" + str(len(array4)) + " (" + str(array4[i][0]) + " " + str(array4[i][1]) + " " + str(array4[i][2]) + " " + str(array4[i][3]) + ") ...")
   os.popen("python " + PWD + "/SDSS_dataquery.py DR8 STARS " + str(array4[i][0]) + " " + str(array4[i][1]) + " " + str(array4[i][2]) + " " + str(array4[i][3]) + " > " + PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1])+ "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv")
+  time.sleep(1)
 
 # Create asctoldac config file
 ENTRIES = np.loadtxt(PWD + "/entries.conf", delimiter="\t", dtype={'names': ('SDSS_name', 'select', 'catalog', 'catalog_name', 'TTYPE', 'HTYPE', 'COMM', 'UNIT', 'DEPTH'), 'formats': ('S50', 'S5', 'S5', 'S10', 'S10', 'S10', 'S50', 'S10', 'i3')})
