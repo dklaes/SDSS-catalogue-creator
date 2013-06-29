@@ -213,10 +213,10 @@ for i in range(len(array4)):
 compressed.close()
 
 # Remove temp files.
-os.remove(PATH + "/catalog.tmp")
-os.remove(PATH + "/catalog.tmp2")
-os.remove(PATH + "/catalog.tmp3")
-os.remove(PATH + "/catalog.tmp4")
-os.remove(PATH + "/asctoldac_tmp.conf")
+os.remove(PWD + "/catalog.tmp")
+os.remove(PWD + "/catalog.tmp2")
+os.remove(PWD + "/catalog.tmp3")
+os.remove(PWD + "/catalog.tmp4")
+os.remove(PWD + "/asctoldac_tmp.conf")
 for i in range(len(array4)):
   os.remove(PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1]) + "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv")
