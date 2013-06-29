@@ -88,8 +88,8 @@ for i in range(len(array)):
   RAVAL = float(file[0].header[RA])
   DECVAL = float(file[0].header[DEC])
   file.close()
-  array2 = np.append(array2,[RAVAL,DECVAL])
-array2 = array2.reshape((-1,2))
+  array2 = np.append(array2,(RAVAL,RAVAL,DECVAL,DECVAL))
+array2 = array2.reshape((-1,4))
 
 def unique(a):
     order = np.lexsort(a.T)
@@ -102,12 +102,26 @@ def unique(a):
 array3 = unique(array2)
 
 # Calculating rectangle
-RAMIN = np.array(array3[:,0]-FOVX/2.0)
-RAMAX = np.array(array3[:,0]+FOVX/2.0)
-DECMIN = np.array(array3[:,1]-FOVY/2.0)
-DECMAX = np.array(array3[:,1]+FOVY/2.0)
+SIZE = np.array(len(array3)*[-FOVX/2.0, FOVX/2.0, -FOVY/2.0, FOVY/2.0])
+SIZE2 = SIZE.reshape((-1,4))
 
-DECMIN = np.where(DECMIN<-90.0, (-180.0-DECMIN, RAMIN+180.0, RAMAX+180.0), DECMIN)
-DECMAX = np.where(DECMAX>90.0, (180.0-DECMAX, RAMIN+180.0, RAMAX+180.0), DECMAX)
-RAMIN = np.where(RAMIN<0, RAMIN+360.0, RAMIN)
-RAMAX = np.where(RAMIN>360.0, RAMIN-360.0, RAMAX)
+array4 = array3+SIZE2
+
+
+# This order has to be like this!
+for i in range(len(array4)):
+  if array4[i][2] < -90.0:
+    array4[i][2] = -180.0 - array4[i][2]
+    array4[i][0] = array4[i][0] + 180.0
+  if array4[i][3] > 90.0:
+    array4[i][3] = 180.0-array4[i][3]
+    array4[i][1] = array4[i][1] + 180.0
+  if array4[i][0] < 0.0:
+    array4[i][0] = array4[i][0] + 360.0
+  if array4[i][1] > 360.0:
+    array4[i][1] = array4[i][1] - 360.0
+
+# Downloading catalogs
+for i in range(len(array4)):
+  print("Downloading area " + str(array4[i][0]) + " " + str(array4[i][1]) + " " + str(array4[i][2]) + " " + str(array4[i][3]) + " ...")
+  os.popen("python " + PWD + "/SDSS_dataquery.py DR8 STARS " + str(array4[i][0]) + " " + str(array4[i][1]) + " " + str(array4[i][2]) + " " + str(array4[i][3]) + " > " + PWD + "/test.txt" + str(i))
