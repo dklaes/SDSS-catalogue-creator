@@ -24,7 +24,7 @@ import numpy as np
 import astropy
 import astropy.io as io
 import astropy.io.fits as fits
-
+import gzip
 
 # Reading command line arguments
 PATH = sys.argv[1]
@@ -184,8 +184,22 @@ for i in range(len(ASCII)-2):
   ASCII2 = str(ASCII2 + " " + ASCII[i+2])
 os.popen("ldactoasc -s -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k " + str(ASCII2[::]) + " > " + PWD + "/" + CATALOG + ".asc")
 
+
+# Now create one single compressed gzip file from all raw catalog datasets.
+compressed = gzip.open(PWD + "/" + CATALOG + "_raw.gz", "wb")
+for i in range(len(array4)):
+  f = open(PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1]) + "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv", "r")
+  f1 = [i for i in f.readlines()]
+  for i in range(len(f1)):
+    compressed.write(f1[i])
+  f.close()
+compressed.close()
+
+# Remove temp files.
 os.remove(PATH + "/catalog.tmp")
 os.remove(PATH + "/catalog.tmp2")
 os.remove(PATH + "/catalog.tmp3")
 os.remove(PATH + "/catalog.tmp4")
 os.remove(PATH + "/asctoldac_tmp.conf")
+for i in range(len(array4)):
+  os.remove(PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1]) + "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv")
