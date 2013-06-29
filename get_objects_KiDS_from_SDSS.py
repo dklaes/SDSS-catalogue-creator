@@ -29,7 +29,7 @@ import gzip
 # Reading command line arguments
 PATH = sys.argv[1]
 #TYPES = sys.argv[2]
-TYPES = ['SCIENCE']
+TYPES = ['SCIENCE', 'STANDARD', 'SCIENCESHORT']
 SAVETOPATH = sys.argv[3]
 CATALOG = sys.argv[4]
 #FILTER = sys.argv[5]
