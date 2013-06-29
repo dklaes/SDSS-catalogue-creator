@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#scipy-0.11, numpy-1.6.2 and astropy-0.2.3 required!
+#scipy-0.11, numpy-1.7.1 and astropy-0.2.3 required!
 
 # ----------------------------------------------------------------
 # File Name:           get_objects_KiDS_from_SDSS.py
