@@ -53,10 +53,13 @@ for i in range(len(CAMERAS)):
     FOVY = float(CAMERAS[i][4])
 
 if RA == '':
-  print("No RA key word for " + CAMERA + " not found!")
+  print("No RA keyword for " + CAMERA + " found!")
 elif DEC == '':
-  print("No DEC key word for " + CAMERA + " not found!")
-
+  print("No DEC keyword for " + CAMERA + " found!")
+elif FOVX == '':
+  print("No field of view keyword in x direction for " + CAMERA + " found!")
+elif FOVY == '':
+  print("No field of view keyword in y direction for " + CAMERA + " found!")
 
 PWD=os.getcwd()
 array = []
