@@ -204,12 +204,16 @@ os.popen(P_LDACTOASC + " -s -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k " + 
 
 # Now create one single compressed gzip file from all raw catalog datasets.
 compressed = gzip.open(PWD + "/" + CATALOG + "_raw.gz", "wb")
+compressed2 = gzip.open(PWD + "/" + CATALOG + "_raw.gz2", "wb")
+f2 = ""
 for i in range(len(array4)):
   f = open(PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1]) + "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv", "r")
   f1 = [i for i in f.readlines()]
   for i in range(len(f1)):
-    compressed.write(f1[i])
+    compressed2.write(f1[i])
+    f2 = str(f2 + f1[i])
   f.close()
+compressed.write(f2)
 compressed.close()
 
 # Remove temp files.
