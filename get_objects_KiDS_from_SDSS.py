@@ -120,17 +120,25 @@ if FAIL > 0:
 
 # Extract RA and DEC from all images.
 array2 = np.array([])
+NOCOORDS = 0
+NOCOORDSFILES = ""
 for i in range(len(array)):
   print("Grepping coordinates " + "{:5.0f}".format(i+1) + "/" + str(len(array)) + "...", end='\r')
   file = fits.open(array[i])
-# What if file doesn't contain this keyword?
-  RAVAL = float(file[0].header[RA])
-  DECVAL = float(file[0].header[DEC])
+  if ((RA in file[0].header) and (DEC in file[0].header)): #"HEADER KEYWORDs EXIST":
+    RAVAL = float(file[0].header[RA])
+    DECVAL = float(file[0].header[DEC])
+    array2 = np.append(array2,(RAVAL,RAVAL,DECVAL,DECVAL))
+  else:
+    NOCOORDS = NOCOORDS + 1
+    NOCOORDSFILES = str(NOCOORDSFILES + "\n" + array[i])
   file.close()
-  array2 = np.append(array2,(RAVAL,RAVAL,DECVAL,DECVAL))
 array2 = array2.reshape((-1,4))
 print(" "*200,end='\r')
-print("Coordinate list created. Got " + str(len(array2)) + " coordinates.")
+if len(array2) == 1:
+  print("Coordinate list created. Got " + str(len(array2)) + " coordinate, " + str(NOCOORDS) + " missing.")
+else:
+  print("Coordinate list created. Got " + str(len(array2)) + " coordinates, " + str(NOCOORDS) + " missing.")
 
 def unique(a):
     order = np.lexsort(a.T)
