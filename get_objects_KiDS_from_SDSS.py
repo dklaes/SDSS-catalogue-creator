@@ -130,7 +130,7 @@ for i in range(len(array)):
   array2 = np.append(array2,(RAVAL,RAVAL,DECVAL,DECVAL))
 array2 = array2.reshape((-1,4))
 print(" "*200,end='\r')
-print("Coordinate list created. Got " + str(len(array)) + " coordinates.")
+print("Coordinate list created. Got " + str(len(array2)) + " coordinates.")
 
 def unique(a):
     order = np.lexsort(a.T)
