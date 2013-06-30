@@ -98,19 +98,22 @@ for i in range(len(FILTERS)):
 	array.append(os.getcwd() + "/" + FILES[l])
       
       os.chdir(PATH + "/" + FILTERS[i])
-print("File list created. Grapped " + str(len(array)) + " files.")
+print(" "*200,end='\r')
+print("File list created. Got " + str(len(array)) + " files.")
       
       
 # Extract RA and DEC from all images.
 array2 = np.array([])
 for i in range(len(array)):
-  print("Grepping coordinates " + "{:5.0f}".format(i+1) + "/" + str(len(array)) + " ...", end='\r')
+  print("Grepping coordinates " + "{:5.0f}".format(i+1) + "/" + str(len(array)) + "...", end='\r')
   file = fits.open(array[i])
   RAVAL = float(file[0].header[RA])
   DECVAL = float(file[0].header[DEC])
   file.close()
   array2 = np.append(array2,(RAVAL,RAVAL,DECVAL,DECVAL))
 array2 = array2.reshape((-1,4))
+print(" "*200,end='\r')
+print("Coordinate list created. Got " + str(len(array)) + " coordinates.")
 
 def unique(a):
     order = np.lexsort(a.T)
@@ -144,9 +147,11 @@ for i in range(len(array4)):
 
 # Downloading catalogs
 for i in range(len(array4)):
-  print("Downloading area " + "{:5.0f}".format(i+1) + "/" + str(len(array4)) + " (RA: " + "{:11.6f}".format(array4[i][0]) + " -> " + "{:11.6f}".format(array4[i][1]) + "; DEC: " + "{:11.6f}".format(array4[i][2]) + " -> " + "{:11.6f}".format(array4[i][3]) + ") ...", end='\r')
+  print("Downloading area " + "{:5.0f}".format(i+1) + "/" + str(len(array4)) + " (RA: " + "{:11.6f}".format(array4[i][0]) + " -> " + "{:11.6f}".format(array4[i][1]) + "; DEC: " + "{:11.6f}".format(array4[i][2]) + " -> " + "{:11.6f}".format(array4[i][3]) + ")...", end='\r')
   os.popen("python " + PWD + "/SDSS_dataquery.py DR8 STARS " + str(array4[i][0]) + " " + str(array4[i][1]) + " " + str(array4[i][2]) + " " + str(array4[i][3]) + " > " + PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1])+ "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv")
   time.sleep(1)
+print(" "*200,end='\r')
+print("Download complete. Got " + str(len(array4)) + " areas.\n")
 
 # Create asctoldac config file
 ENTRIES = np.loadtxt(PWD + "/entries.conf", delimiter="\t", dtype={'names': ('SDSS_name', 'select', 'catalog', 'catalog_name', 'TTYPE', 'HTYPE', 'COMM', 'UNIT', 'DEPTH'), 'formats': ('S50', 'S5', 'S5', 'S10', 'S10', 'S10', 'S50', 'S10', 'i3')})
@@ -168,7 +173,7 @@ config.close()
 
 os.popen("cat " + PWD + "/catalog_*.csv > " + PWD + "/catalog.tmp")
 print("Getting rid of doubled objects...")
- 
+
 os.popen("awk '{if (a[$0]==0) {a[$0]=1; print}}' " + PWD + "/catalog.tmp | sed -ne '/^[[:digit:]]/p' | awk '{print $0, 'SDSSDR9'}' > " + PWD + "/catalog.tmp2")
 
 print("Converting asc to ldac...")
@@ -206,20 +211,16 @@ os.popen(P_LDACTOASC + " -s -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k " + 
 
 # Now create one single compressed gzip file from all raw catalog datasets.
 compressed = gzip.open(PWD + "/" + CATALOG + "_raw.gz", "wb")
-compressed2 = gzip.open(PWD + "/" + CATALOG + "_raw.gz2", "wb")
-f2 = ""
 for i in range(len(array4)):
   f = open(PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1]) + "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv", "r")
   f1 = [i for i in f.readlines()]
   for i in range(len(f1)):
-    compressed2.write(f1[i])
-    f2 = str(f2 + f1[i])
+    compressed.write(f1[i])
   f.close()
-compressed.write(f2)
 compressed.close()
 
 # Remove temp files.
-#os.remove(PWD + "/catalog.tmp")
+os.remove(PWD + "/catalog.tmp")
 os.remove(PWD + "/catalog.tmp2")
 os.remove(PWD + "/catalog.tmp3")
 os.remove(PWD + "/catalog.tmp4")
