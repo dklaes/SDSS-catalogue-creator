@@ -83,6 +83,8 @@ elif FOVY == '':
 array = []
 
 # Creating list with all images and paths.
+FAIL = 0
+FAILFILES = ""
 for i in range(len(FILTERS)):
   os.chdir(PATH + "/" + FILTERS[i])
   LIST = os.listdir(os.getcwd())
@@ -97,17 +99,31 @@ for i in range(len(FILTERS)):
       for l in range(len(FILES)):
 	if os.path.exists(os.getcwd() + "/" + FILES[l]):
 	  array.append(os.getcwd() + "/" + FILES[l])
-      
+	else:
+	  FAIL = FAIL + 1
+	  FAILFILES = str(FAILFILES + "\n" + os.getcwd() + "/" + FILES[l])
       os.chdir(PATH + "/" + FILTERS[i])
 print(" "*200,end='\r')
-print("File list created. Got " + str(len(array)) + " files.")
-      
-      
+if len(array) == 1:
+  if FAIL == 1:
+    print("File list created. Got " + str(len(array)) + " file in total, " + str(FAIL) + " file missing.")
+else:
+  if FAIL == 1:
+    print("File list created. Got " + str(len(array)) + " files in total, " + str(FAIL) + " file missing.")
+  else:
+    print("File list created. Got " + str(len(array)) + " files in total, " + str(FAIL) + " files missing.")
+if FAIL > 0:
+  print("The following files are missing:\n")
+  print(FAILFILES)
+
+
+
 # Extract RA and DEC from all images.
 array2 = np.array([])
 for i in range(len(array)):
   print("Grepping coordinates " + "{:5.0f}".format(i+1) + "/" + str(len(array)) + "...", end='\r')
   file = fits.open(array[i])
+# What if file doesn't contain this keyword?
   RAVAL = float(file[0].header[RA])
   DECVAL = float(file[0].header[DEC])
   file.close()
