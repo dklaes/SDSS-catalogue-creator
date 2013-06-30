@@ -87,7 +87,7 @@ for i in range(len(FILTERS)):
   LIST = os.listdir(os.getcwd())
   
   for j in range(len(LIST)):
-    print("\nGetting coordinates from filter " + FILTERS[i] + " in directory " + LIST[j] + "...")
+    print("Getting coordinates from filter " + FILTERS[i] + " in directory " + LIST[j] + "...", end='\r')
     
     for k in range(len(TYPES)):
       os.chdir(os.getcwd() + "/" + LIST[j] + "/" + TYPES[k] + "_" + FILTERS[i] + "/ORIGINALS/")
@@ -97,12 +97,13 @@ for i in range(len(FILTERS)):
 	array.append(os.getcwd() + "/" + FILES[l])
       
       os.chdir(PATH + "/" + FILTERS[i])
+print("File list created. Grapped " + str(len(array)) + " files.")
       
       
 # Extract RA and DEC from all images.
 array2 = np.array([])
 for i in range(len(array)):
-  print(str(i+1) + "/" + str(len(array)))
+  print("Grepping coordinates " + "{:5.0f}".format(i+1) + "/" + str(len(array)) + " ...", end='\r')
   file = fits.open(array[i])
   RAVAL = float(file[0].header[RA])
   DECVAL = float(file[0].header[DEC])
