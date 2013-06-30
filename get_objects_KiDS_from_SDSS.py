@@ -142,7 +142,7 @@ for i in range(len(array4)):
 
 # Downloading catalogs
 for i in range(len(array4)):
-  print("Downloading area " + str(i+1) + "/" + str(len(array4)) + " (RA: " + str(array4[i][0]) + " -> " + str(array4[i][1]) + "; DEC:  " + str(array4[i][2]) + " -> " + str(array4[i][3]) + ") ...")
+  print("Downloading area " + str(i+1) + "/" + str(len(array4)) + " (RA: " + "{10.4f}".format(array4[i][0]) + " -> " + "{10.4f}".format(array4[i][1]) + "; DEC:  " + "{10.4f}".format(array4[i][2]) + " -> " + "{10.4f}".format(array4[i][3]) + ") ...")
   os.popen("python " + PWD + "/SDSS_dataquery.py DR8 STARS " + str(array4[i][0]) + " " + str(array4[i][1]) + " " + str(array4[i][2]) + " " + str(array4[i][3]) + " > " + PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1])+ "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv")
   time.sleep(1)
 
