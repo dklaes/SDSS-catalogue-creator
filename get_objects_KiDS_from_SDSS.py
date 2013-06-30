@@ -95,7 +95,8 @@ for i in range(len(FILTERS)):
       FILES = os.listdir(os.getcwd())
       
       for l in range(len(FILES)):
-	array.append(os.getcwd() + "/" + FILES[l])
+	if os.path.exists(os.getcwd() + "/" + FILES[l]):
+	  array.append(os.getcwd() + "/" + FILES[l])
       
       os.chdir(PATH + "/" + FILTERS[i])
 print(" "*200,end='\r')
