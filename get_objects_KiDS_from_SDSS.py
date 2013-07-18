@@ -214,8 +214,8 @@ os.popen(P_LDACCALC + " -i " + PWD + "/catalog.tmp3 -o " + PWD + "/catalog.tmp4 
 			-c '(sqrt((ierr*ierr)+(zerr*zerr)));' -n imzerr '' -k FLOAT")
 
 os.popen(P_LDACADDKEY + " -i " + PWD + "/catalog.tmp4 -o " + PWD + "/" + CATALOG + ".cat -t STDTAB \
-			-k Epoch 2000.0 FLOAT '' n 0 SHORT '' m 0 SHORT '' A_WCS 0.0005 FLOAT '' \
-			B_WCS 0.0005 FLOAT '' THETAWCS 0.0 FLOAT '' Flag 0 SHORT ''")
+			-k Epoch 2000.0 FLOAT '' n 0 SHORT '' m 0 SHORT '' A_WCS 0.0002 FLOAT '' \
+			B_WCS 0.0002 FLOAT '' THETAWCS 0.0 FLOAT '' Flag 0 SHORT ''")
 
 print("Creating skycat file...")
 SKYCATCONFIG=open(PWD + "/skycat.conf", "r")
