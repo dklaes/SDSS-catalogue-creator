@@ -14,7 +14,8 @@ CATDIR=$3
 RADIUS=$4
 FINALCAT=$5
 FILTERS="g_SDSS i_SDSS r_SDSS u_SDSS z_SDSS"
-GETSDSS=/vol/science01/scratch/dklaes/data/SDSSR9_query/SDSSR7_objects.py
+#GETSDSS=/vol/science01/scratch/dklaes/data/SDSSR9_query/SDSSR7_objects.py
+GETSDSS=/users/dklaes/git/SDSS-catalogue-creator/SDSS_dataquery.py
 PWD=`pwd`
 for FILTER in ${FILTERS}
 do
@@ -70,7 +71,7 @@ do
   DECMIN=`echo ${LINE} | awk '{print $3}'`
   DECMAX=`echo ${LINE} | awk '{print $4}'`
   echo "Downloading area ${LINE} ..."
-  ${GETSDSS} STARS ${RAMIN} ${RAMAX} ${DECMIN} ${DECMAX} > catalog_${RAMIN}_${RAMAX}_${DECMIN}_${DECMAX}.csv
+  ${GETSDSS} DR9 STARS ${RAMIN} ${RAMAX} ${DECMIN} ${DECMAX} > catalog_${RAMIN}_${RAMAX}_${DECMIN}_${DECMAX}.csv
   sleep 1
 done
 cat catalog_*.csv > catalog.tmp
@@ -210,8 +211,8 @@ ldaccalc -i catalog.tmp3 -o catalog.tmp9 -t STDTAB -c "(umag-gmag);" -n umg "" -
 						   -c "(sqrt((gerr*gerr)+(rerr*rerr)));" -n gmrerr "" -k FLOAT \
 						   -c "(sqrt((rerr*rerr)+(ierr*ierr)));" -n rmierr "" -k FLOAT \
 						   -c "(sqrt((ierr*ierr)+(zerr*zerr)));" -n imzerr "" -k FLOAT
-ldacaddkey -i catalog.tmp9 -o ${FINALCAT}.cat -t STDTAB -k Epoch 2000.0 FLOAT "" n 0 SHORT "" m 0 SHORT "" A_WCS 0.0005 FLOAT "" \
-							  B_WCS 0.0005 FLOAT "" THETAWCS 0.0 FLOAT "" Flag 0 SHORT ""
+ldacaddkey -i catalog.tmp9 -o ${FINALCAT}.cat -t STDTAB -k Epoch 2000.0 FLOAT "" n 0 SHORT "" m 0 SHORT "" A_WCS 0.0002 FLOAT "" \
+							  B_WCS 0.0002 FLOAT "" THETAWCS 0.0 FLOAT "" Flag 0 SHORT ""
 # ldacaddkey -i catalog.tmp10 -o catalog.tmp11 -t STDTAB -k n 0 SHORT ""
 # ldacaddkey -i catalog.tmp11 -o catalog.tmp12 -t STDTAB -k m 0 SHORT ""
 # ldacaddkey -i catalog.tmp12 -o catalog.tmp13 -t STDTAB -k A_WCS 0.0005 FLOAT ""
