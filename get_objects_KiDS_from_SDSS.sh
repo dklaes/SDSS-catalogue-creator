@@ -58,7 +58,7 @@ do
  done
 done
 
-# echo "Getting fields..."
+ echo "Getting fields..."
 
 cd ${CATDIR}
 awk '{if (a[$0]==0) {a[$0]=1; print}}' fields.tmp | awk '!/^$/' > fields.list
@@ -211,7 +211,9 @@ ldaccalc -i catalog.tmp3 -o catalog.tmp9 -t STDTAB -c "(umag-gmag);" -n umg "" -
 						   -c "(sqrt((gerr*gerr)+(rerr*rerr)));" -n gmrerr "" -k FLOAT \
 						   -c "(sqrt((rerr*rerr)+(ierr*ierr)));" -n rmierr "" -k FLOAT \
 						   -c "(sqrt((ierr*ierr)+(zerr*zerr)));" -n imzerr "" -k FLOAT
-ldacaddkey -i catalog.tmp9 -o ${FINALCAT}.cat -t STDTAB -k Epoch 2000.0 FLOAT "" n 0 SHORT "" m 0 SHORT "" A_WCS 0.0002 FLOAT "" \
+#ldacaddkey -i catalog.tmp9 -o ${FINALCAT}.cat -t STDTAB -k Epoch 2000.0 FLOAT "" n 0 SHORT "" m 0 SHORT "" A_WCS 0.0002 FLOAT "" \
+#							  B_WCS 0.0002 FLOAT "" THETAWCS 0.0 FLOAT "" Flag 0 SHORT ""
+ldacaddkey -i catalog.tmp9 -o ${FINALCAT}.cat -t STDTAB -k Epoch 2000.0 FLOAT "" A_WCS 0.0002 FLOAT "" \
 							  B_WCS 0.0002 FLOAT "" THETAWCS 0.0 FLOAT "" Flag 0 SHORT ""
 # ldacaddkey -i catalog.tmp10 -o catalog.tmp11 -t STDTAB -k n 0 SHORT ""
 # ldacaddkey -i catalog.tmp11 -o catalog.tmp12 -t STDTAB -k m 0 SHORT ""
