@@ -17,65 +17,65 @@ FILTERS="g_SDSS i_SDSS r_SDSS u_SDSS z_SDSS"
 #GETSDSS=/vol/science01/scratch/dklaes/data/SDSSR9_query/SDSSR7_objects.py
 GETSDSS=/users/dklaes/git/SDSS-catalogue-creator/SDSS_dataquery.py
 PWD=`pwd`
-for FILTER in ${FILTERS}
-do
- cd $1/${FILTER}/
- for DIR in `ls -1`
- do
-   echo "Getting coordinates from filter ${FILTER} in directory ${DIR} ..."
-   for TYPE in ${TYPES}
-   do
-	if [  -d ${DIR}/${TYPE}_${FILTER}/ORIGINALS/ ]; then
-	  cd ${DIR}/${TYPE}_${FILTER}/ORIGINALS/
-	  for IMAGE in `ls -1`
-	  do
-	    COORDS=`dfits ${IMAGE} | fitsort -d RA DEC | awk '{print $2, $3}'`
-	    echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-'${RADIUS}', $1+'${RADIUS}', $2-'${RADIUS}', $2+'${RADIUS}'; else print $1-'${RADIUS}'+360.0, $1+'${RADIUS}', $2-'${RADIUS}', $2+'${RADIUS}'}' >> ${CATDIR}/fields.tmp
+# for FILTER in ${FILTERS}
+# do
+#  cd $1/${FILTER}/
+#  for DIR in `ls -1`
+#  do
+#    echo "Getting coordinates from filter ${FILTER} in directory ${DIR} ..."
+#    for TYPE in ${TYPES}
+#    do
+# 	if [  -d ${DIR}/${TYPE}_${FILTER}/ORIGINALS/ ]; then
+# 	  cd ${DIR}/${TYPE}_${FILTER}/ORIGINALS/
+# 	  for IMAGE in `ls -1`
+# 	  do
+# 	    COORDS=`dfits ${IMAGE} | fitsort -d RA DEC | awk '{print $2, $3}'`
+# 	    echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-'${RADIUS}', $1+'${RADIUS}', $2-'${RADIUS}', $2+'${RADIUS}'; else print $1-'${RADIUS}'+360.0, $1+'${RADIUS}', $2-'${RADIUS}', $2+'${RADIUS}'}' >> ${CATDIR}/fields.tmp
+# 
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-1.0, $1-0.5, $2-1.0, $2-0.5; else print $1-1.0+360.0, $1-0.5, $2-1.0, $2-0.5}' >> ${CATDIR}/fields.tmp
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-0.5, $1+0.0, $2-1.0, $2-0.5; else print $1-0.5+360.0, $1+0.0, $2-1.0, $2-0.5}' >> ${CATDIR}/fields.tmp
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.0, $1+0.5, $2-1.0, $2-0.5; else print $1+0.0+360.0, $1+0.5, $2-1.0, $2-0.5}' >> ${CATDIR}/fields.tmp
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.5, $1+1.0, $2-1.0, $2-0.5; else print $1+0.5+360.0, $1+1.0, $2-1.0, $2-0.5}' >> ${CATDIR}/fields.tmp
+#     # # 
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-1.0, $1-0.5, $2-0.5, $2+0.0; else print $1-1.0+360.0, $1-0.5, $2-0.5, $2+0.0}' >> ${CATDIR}/fields.tmp
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-0.5, $1+0.0, $2-0.5, $2+0.0; else print $1-0.5+360.0, $1+0.0, $2-0.5, $2+0.0}' >> ${CATDIR}/fields.tmp
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.0, $1+0.5, $2-0.5, $2+0.0; else print $1+0.0+360.0, $1+0.5, $2-0.5, $2+0.0}' >> ${CATDIR}/fields.tmp
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.5, $1+1.0, $2-0.5, $2+0.0; else print $1+0.5+360.0, $1+1.0, $2-0.5, $2+0.0}' >> ${CATDIR}/fields.tmp
+#     # # 
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-1.0, $1-0.5, $2+0.0, $2+0.5; else print $1-1.0+360.0, $1-0.5, $2+0.0, $2+0.5}' >> ${CATDIR}/fields.tmp
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-0.5, $1+0.0, $2+0.0, $2+0.5; else print $1-0.5+360.0, $1+0.0, $2+0.0, $2+0.5}' >> ${CATDIR}/fields.tmp
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.0, $1+0.5, $2+0.0, $2+0.5; else print $1+0.0+360.0, $1+0.5, $2+0.0, $2+0.5}' >> ${CATDIR}/fields.tmp
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.5, $1+1.0, $2+0.0, $2+0.5; else print $1+0.5+360.0, $1+1.0, $2+0.0, $2+0.5}' >> ${CATDIR}/fields.tmp
+#     # # 
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-1.0, $1-0.5, $2+0.5, $2+1.0; else print $1-1.0+360.0, $1-0.5, $2+0.5, $2+1.0}' >> ${CATDIR}/fields.tmp
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-0.5, $1+0.0, $2+0.5, $2+1.0; else print $1-0.5+360.0, $1+0.0, $2+0.5, $2+1.0}' >> ${CATDIR}/fields.tmp
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.0, $1+0.5, $2+0.5, $2+1.0; else print $1+0.0+360.0, $1+0.5, $2+0.5, $2+1.0}' >> ${CATDIR}/fields.tmp
+#     # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.5, $1+1.0, $2+0.5, $2+1.0; else print $1+0.5+360.0, $1+1.0, $2+0.5, $2+1.0}' >> ${CATDIR}/fields.tmp
+# 	  done
+# 	  cd $1/${FILTER}/
+# 	fi
+#    done
+#  done
+# done
 
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-1.0, $1-0.5, $2-1.0, $2-0.5; else print $1-1.0+360.0, $1-0.5, $2-1.0, $2-0.5}' >> ${CATDIR}/fields.tmp
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-0.5, $1+0.0, $2-1.0, $2-0.5; else print $1-0.5+360.0, $1+0.0, $2-1.0, $2-0.5}' >> ${CATDIR}/fields.tmp
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.0, $1+0.5, $2-1.0, $2-0.5; else print $1+0.0+360.0, $1+0.5, $2-1.0, $2-0.5}' >> ${CATDIR}/fields.tmp
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.5, $1+1.0, $2-1.0, $2-0.5; else print $1+0.5+360.0, $1+1.0, $2-1.0, $2-0.5}' >> ${CATDIR}/fields.tmp
-    # # 
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-1.0, $1-0.5, $2-0.5, $2+0.0; else print $1-1.0+360.0, $1-0.5, $2-0.5, $2+0.0}' >> ${CATDIR}/fields.tmp
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-0.5, $1+0.0, $2-0.5, $2+0.0; else print $1-0.5+360.0, $1+0.0, $2-0.5, $2+0.0}' >> ${CATDIR}/fields.tmp
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.0, $1+0.5, $2-0.5, $2+0.0; else print $1+0.0+360.0, $1+0.5, $2-0.5, $2+0.0}' >> ${CATDIR}/fields.tmp
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.5, $1+1.0, $2-0.5, $2+0.0; else print $1+0.5+360.0, $1+1.0, $2-0.5, $2+0.0}' >> ${CATDIR}/fields.tmp
-    # # 
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-1.0, $1-0.5, $2+0.0, $2+0.5; else print $1-1.0+360.0, $1-0.5, $2+0.0, $2+0.5}' >> ${CATDIR}/fields.tmp
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-0.5, $1+0.0, $2+0.0, $2+0.5; else print $1-0.5+360.0, $1+0.0, $2+0.0, $2+0.5}' >> ${CATDIR}/fields.tmp
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.0, $1+0.5, $2+0.0, $2+0.5; else print $1+0.0+360.0, $1+0.5, $2+0.0, $2+0.5}' >> ${CATDIR}/fields.tmp
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.5, $1+1.0, $2+0.0, $2+0.5; else print $1+0.5+360.0, $1+1.0, $2+0.0, $2+0.5}' >> ${CATDIR}/fields.tmp
-    # # 
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-1.0, $1-0.5, $2+0.5, $2+1.0; else print $1-1.0+360.0, $1-0.5, $2+0.5, $2+1.0}' >> ${CATDIR}/fields.tmp
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1-0.5, $1+0.0, $2+0.5, $2+1.0; else print $1-0.5+360.0, $1+0.0, $2+0.5, $2+1.0}' >> ${CATDIR}/fields.tmp
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.0, $1+0.5, $2+0.5, $2+1.0; else print $1+0.0+360.0, $1+0.5, $2+0.5, $2+1.0}' >> ${CATDIR}/fields.tmp
-    # # 	echo "${COORDS}" | awk '{if ($1-'${RADIUS}' >= 0.0) print $1+0.5, $1+1.0, $2+0.5, $2+1.0; else print $1+0.5+360.0, $1+1.0, $2+0.5, $2+1.0}' >> ${CATDIR}/fields.tmp
-	  done
-	  cd $1/${FILTER}/
-	fi
-   done
- done
-done
-
- echo "Getting fields..."
+# echo "Getting fields..."
 
 cd ${CATDIR}
-awk '{if (a[$0]==0) {a[$0]=1; print}}' fields.tmp | awk '!/^$/' > fields.list
-
-IFS=$'\n'
-for LINE in `cat fields.list`
-do
-  RAMIN=`echo ${LINE} | awk '{print $1}'`
-  RAMAX=`echo ${LINE} | awk '{print $2}'`
-  DECMIN=`echo ${LINE} | awk '{print $3}'`
-  DECMAX=`echo ${LINE} | awk '{print $4}'`
-  echo "Downloading area ${LINE} ..."
-  ${GETSDSS} DR9 STARS ${RAMIN} ${RAMAX} ${DECMIN} ${DECMAX} > catalog_${RAMIN}_${RAMAX}_${DECMIN}_${DECMAX}.csv
-  sleep 1
-done
-cat catalog_*.csv > catalog.tmp
-echo "Getting rid of doubled objects..."
+# awk '{if (a[$0]==0) {a[$0]=1; print}}' fields.tmp | awk '!/^$/' > fields.list
+# 
+# IFS=$'\n'
+# for LINE in `cat fields.list`
+# do
+#   RAMIN=`echo ${LINE} | awk '{print $1}'`
+#   RAMAX=`echo ${LINE} | awk '{print $2}'`
+#   DECMIN=`echo ${LINE} | awk '{print $3}'`
+#   DECMAX=`echo ${LINE} | awk '{print $4}'`
+#   echo "Downloading area ${LINE} ..."
+#   ${GETSDSS} DR9 STARS ${RAMIN} ${RAMAX} ${DECMIN} ${DECMAX} > catalog_${RAMIN}_${RAMAX}_${DECMIN}_${DECMAX}.csv
+#   sleep 1
+# done
+# cat catalog_*.csv > catalog.tmp
+# echo "Getting rid of doubled objects..."
  
 awk '{if (a[$0]==0) {a[$0]=1; print}}' catalog.tmp | sed -ne '/^[[:digit:]]/p' | awk '{print $0, "SDSSDR9"}' > catalog.tmp2
 
@@ -198,12 +198,12 @@ echo "#"			>> ./asctoldac_tmp.conf
 
 echo "Converting asc to ldac..."
 asctoldac -i catalog.tmp2 -o catalog.tmp3 -c asctoldac_tmp.conf -t STDTAB -b 1 -n "sdss ldac cat"
-#ldacfilter -i catalog.tmp3 -o catalog.tmp4 -t STDTAB -c "((ierr<0.05)AND(ierr>0));"
-#ldacfilter -i catalog.tmp4 -o catalog.tmp5 -t STDTAB -c "((uerr<0.05)AND(uerr>0));"
-#ldacfilter -i catalog.tmp5 -o catalog.tmp6 -t STDTAB -c "((gerr<0.05)AND(gerr>0));"
-#ldacfilter -i catalog.tmp6 -o catalog.tmp7 -t STDTAB -c "((rerr<0.05)AND(rerr>0));"
-#ldacfilter -i catalog.tmp7 -o catalog.tmp8 -t STDTAB -c "((zerr<0.05)AND(zerr>0));"
-ldaccalc -i catalog.tmp3 -o catalog.tmp9 -t STDTAB -c "(umag-gmag);" -n umg "" -k FLOAT \
+ldacfilter -i catalog.tmp3 -o catalog.tmp4 -t STDTAB -c "(ierr>0);"
+ldacfilter -i catalog.tmp4 -o catalog.tmp5 -t STDTAB -c "(uerr>0);"
+ldacfilter -i catalog.tmp5 -o catalog.tmp6 -t STDTAB -c "(gerr>0);"
+ldacfilter -i catalog.tmp6 -o catalog.tmp7 -t STDTAB -c "(rerr>0);"
+ldacfilter -i catalog.tmp7 -o catalog.tmp8 -t STDTAB -c "(zerr>0);"
+ldaccalc -i catalog.tmp8 -o catalog.tmp9 -t STDTAB -c "(umag-gmag);" -n umg "" -k FLOAT \
 						   -c "(gmag-rmag);" -n gmr "" -k FLOAT \
 						   -c "(rmag-imag);" -n rmi "" -k FLOAT \
 						   -c "(imag-zmag);" -n imz "" -k FLOAT \
