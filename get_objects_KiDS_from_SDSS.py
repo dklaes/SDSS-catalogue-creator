@@ -136,9 +136,9 @@ for i in range(len(array)):
 array2 = array2.reshape((-1,4))
 print(" "*200,end='\r')
 if len(array2) == 1:
-  print("Coordinate list created. Got " + str(len(array2)) + " coordinate, " + str(NOCOORDS) + " missing.")
+  print("Coordinate list created. Got " + str(len(array2)) + " coordinate, " + str(NOCOORDS) + " missing.\n")
 else:
-  print("Coordinate list created. Got " + str(len(array2)) + " coordinates, " + str(NOCOORDS) + " missing.")
+  print("Coordinate list created. Got " + str(len(array2)) + " coordinates, " + str(NOCOORDS) + " missing.\n")
 
 def unique(a):
     order = np.lexsort(a.T)
@@ -147,14 +147,38 @@ def unique(a):
     ui = np.ones(len(a), 'bool')
     ui[1:] = (diff != 0).any(axis=1) 
     return a[ui]
-    
+
 array3 = unique(array2)
+print(str(len(array3)) + "/" + str(len(array2)) + " coordinates are unique.\n")
+
+if os.path.exists (PWD + "/old_coordinates.csv"):
+	OLDPOINTINGS = (np.loadtxt(PWD + "/old_coordinates.csv", delimiter=" ")).reshape((-1,4))
+else:
+	print("No old coordinate file available!\n")
+	OLDPOINTINGS = np.array([])
+
+TODOWNLOAD = np.array([])
+for i in range(len(array3)):
+	AVAILABLE=0
+	for j in range(len(OLDPOINTINGS)):
+		if np.array_equal(array3[i], OLDPOINTINGS[j]):
+			AVAILABLE=1
+	if AVAILABLE == 0:
+		TODOWNLOAD = np.append(TODOWNLOAD, array3[i])
+TODOWNLOAD2 = TODOWNLOAD.reshape((-1,4))
+print(str(len(array3)-len(TODOWNLOAD2)) + "/" + str(len(array3)) + " unique coordinates are already downloaded.\n")
+np.savetxt(PWD + "/old_coordinates.csv", (np.append(OLDPOINTINGS, TODOWNLOAD2)).reshape((-1,4)), delimiter=" ")
+if len(TODOWNLOAD2) == 0:
+	print("No new coordinates found for downloading. Exiting!")
+	exit()
+print("Downloading " + str(len(TODOWNLOAD2)) + " new coordinates...\n")
+exit()
 
 # Calculating rectangle
 SIZE = np.array(len(array3)*[-FOVX/2.0, FOVX/2.0, -FOVY/2.0, FOVY/2.0])
 SIZE2 = SIZE.reshape((-1,4))
 
-array4 = array3+SIZE2
+array4 = TODOWNLOAD+SIZE2
 
 
 # This order has to be like this!
