@@ -177,7 +177,7 @@ print("Downloading " + str(len(TODOWNLOAD2)) + " new coordinates...\n")
 SIZE = np.array(len(array3)*[-FOVX/2.0, FOVX/2.0, -FOVY/2.0, FOVY/2.0])
 SIZE2 = SIZE.reshape((-1,4))
 
-array4 = TODOWNLOAD+SIZE2
+array4 = TODOWNLOAD2+SIZE2
 
 
 # This order has to be like this!
