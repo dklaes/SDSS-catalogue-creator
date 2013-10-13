@@ -30,7 +30,7 @@ import time
 
 # Importing paths for external programs
 PWD=os.getcwd()
-PROGS = np.loadtxt(PWD + "/progs.ini", delimiter="=", dtype={'names': ('variabel', 'path',), 'formats': ('S50', 'S250')})
+PROGS = np.loadtxt(PWD + "/progs.ini", delimiter="=", dtype={'names': ('variabel', 'path'), 'formats': ('S50', 'S250')})
 for i in range(len(PROGS)):
   if PROGS[i][0] == "P_ASCTOLDAC":
     P_ASCTOLDAC = PROGS[i][1]
@@ -172,7 +172,6 @@ if len(TODOWNLOAD2) == 0:
 	print("No new coordinates found for downloading. Exiting!")
 	exit()
 print("Downloading " + str(len(TODOWNLOAD2)) + " new coordinates...\n")
-exit()
 
 # Calculating rectangle
 SIZE = np.array(len(array3)*[-FOVX/2.0, FOVX/2.0, -FOVY/2.0, FOVY/2.0])
