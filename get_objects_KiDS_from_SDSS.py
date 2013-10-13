@@ -229,12 +229,36 @@ print("Converting asc to ldac...")
 os.popen(P_ASCTOLDAC + " -i " + PWD + "/catalog.tmp2 -o " + PWD + "/catalog.tmp3 -c " + PWD + "/asctoldac_tmp.conf -t STDTAB -b 1 -n 'sdss ldac cat'")
 os.popen(P_LDACCALC + " -i " + PWD + "/catalog.tmp3 -o " + PWD + "/catalog.tmp4 -t STDTAB \
 			-c '(umag-gmag);' -n umg '' -k FLOAT \
-			-c '(gmag-rmag);' -n gmr '' -k FLOAT \
-			-c '(rmag-imag);' -n rmi '' -k FLOAT \
-			-c '(imag-zmag);' -n imz '' -k FLOAT \
 			-c '(sqrt((uerr*uerr)+(gerr*gerr)));' -n umgerr '' -k FLOAT \
+			-c '(umag-rmag);' -n umr '' -k FLOAT \
+			-c '(sqrt((uerr*uerr)+(rerr*rerr)));' -n umrerr '' -k FLOAT \
+			-c '(umag-imag);' -n umi '' -k FLOAT \
+			-c '(sqrt((uerr*uerr)+(ierr*ierr)));' -n umierr '' -k FLOAT \
+			-c '(umag-zmag);' -n umz '' -k FLOAT \
+			-c '(sqrt((uerr*uerr)+(zerr*zerr)));' -n umzerr '' -k FLOAT \
+			-c '(gmag-umag);' -n gmu '' -k FLOAT \
+			-c '(sqrt((gerr*gerr)+(uerr*uerr)));' -n gmuerr '' -k FLOAT \
+			-c '(gmag-rmag);' -n gmr '' -k FLOAT \
 			-c '(sqrt((gerr*gerr)+(rerr*rerr)));' -n gmrerr '' -k FLOAT \
+			-c '(gmag-imag);' -n gmi '' -k FLOAT \
+			-c '(sqrt((gerr*gerr)+(ierr*ierr)));' -n gmierr '' -k FLOAT \
+			-c '(gmag-zmag);' -n gmz '' -k FLOAT \
+			-c '(sqrt((gerr*gerr)+(zerr*zerr)));' -n gmzerr '' -k FLOAT \
+			-c '(rmag-umag);' -n rmu '' -k FLOAT \
+			-c '(sqrt((rerr*rerr)+(uerr*uerr)));' -n rmuerr '' -k FLOAT \
+			-c '(rmag-gmag);' -n rmg '' -k FLOAT \
+			-c '(sqrt((rerr*rerr)+(gerr*gerr)));' -n rmgerr '' -k FLOAT \
+			-c '(rmag-imag);' -n rmi '' -k FLOAT \
 			-c '(sqrt((rerr*rerr)+(ierr*ierr)));' -n rmierr '' -k FLOAT \
+			-c '(rmag-zmag);' -n rmz '' -k FLOAT \
+			-c '(sqrt((rerr*rerr)+(zerr*zerr)));' -n rmzerr '' -k FLOAT \
+			-c '(imag-umag);' -n imu '' -k FLOAT \
+			-c '(sqrt((ierr*ierr)+(uerr*uerr)));' -n imuerr '' -k FLOAT \
+			-c '(imag-gmag);' -n img '' -k FLOAT \
+			-c '(sqrt((ierr*ierr)+(gerr*gerr)));' -n imgerr '' -k FLOAT \
+			-c '(imag-rmag);' -n imr '' -k FLOAT \
+			-c '(sqrt((ierr*ierr)+(rerr*rerr)));' -n imrerr '' -k FLOAT \
+			-c '(imag-zmag);' -n imz '' -k FLOAT \
 			-c '(sqrt((ierr*ierr)+(zerr*zerr)));' -n imzerr '' -k FLOAT")
 
 os.popen(P_LDACADDKEY + " -i " + PWD + "/catalog.tmp4 -o " + PWD + "/" + CATALOG + ".cat -t STDTAB \
