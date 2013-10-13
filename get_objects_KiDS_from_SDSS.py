@@ -202,7 +202,7 @@ print(" "*200,end='\r')
 print("Download complete. Got " + str(len(array4)) + " areas.\n")
 
 # Create asctoldac config file
-ENTRIES = np.loadtxt(PWD + "/entries.conf", delimiter="\t", dtype={'names': ('SDSS_name', 'select', 'catalog', 'catalog_name', 'TTYPE', 'HTYPE', 'COMM', 'UNIT', 'DEPTH'), 'formats': ('S50', 'S5', 'S5', 'S10', 'S10', 'S10', 'S50', 'S10', 'i3')})
+ENTRIES = np.loadtxt(PWD + "/entries.conf", delimiter="\t", dtype={'names': ('SDSS_name', 'select', 'catalog', 'catalog_name', 'TTYPE', 'HTYPE', 'COMM', 'UNIT', 'DEPTH'), 'formats': ('S50', 'S5', 'S5', 'S10', 'S10', 'S10', 'S50', 'S10', 'int16')})
 
 config = open(PWD + "/asctoldac_tmp.conf","w")
 config.write("VERBOSE = DEBUG\n")
