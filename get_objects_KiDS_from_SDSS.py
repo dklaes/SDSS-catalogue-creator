@@ -30,7 +30,7 @@ import time
 
 # Importing paths for external programs
 PWD=os.getcwd()
-PROGS = np.loadtxt(PWD + "/progs.ini", delimiter="=", dtype={'names': ('variabel', 'path'), 'formats': ('S50', 'S250')})
+PROGS = np.loadtxt(PWD + "/progs_XPSM1530.ini", delimiter="=", dtype={'names': ('variabel', 'path'), 'formats': ('S50', 'S250')})
 for i in range(len(PROGS)):
   if PROGS[i][0] == "P_ASCTOLDAC":
     P_ASCTOLDAC = PROGS[i][1]
@@ -279,6 +279,15 @@ ASCII2 = str(ASCII[1])
 for i in range(len(ASCII)-2):
   ASCII2 = str(ASCII2 + " " + ASCII[i+2])
 os.popen(P_LDACTOASC + " -s -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k " + str(ASCII2[::]) + " > " + PWD + "/" + CATALOG + ".asc")
+
+
+# Create DS9 region file with circles with a radius of 50 pixels.
+f = open(PWD + "/" + CATALOG + ".reg", "w")
+f.write("# Region file format: DS9 version 4.1\n")
+f.write("global color=green dashlist=8 3 width=1 font=\"helvetica 10 normal roman\" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1\n")
+f.write("fk5\n")
+f.close()
+os.popen(P_LDACTOASC + " -b -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k Ra Dec | awk '{print \"circle(\" $1 \",\" $2 \",50i)\"}' >> " + PWD + "/" + CATALOG + ".reg")
 
 
 # Now create one single compressed gzip file from all raw catalog datasets.
