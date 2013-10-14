@@ -149,6 +149,7 @@ def unique(a):
     return a[ui]
 
 array3 = unique(array2)
+
 print(str(len(array3)) + "/" + str(len(array2)) + " coordinates are unique.\n")
 
 if os.path.exists (PWD + "/old_coordinates.csv"):
@@ -160,21 +161,33 @@ else:
 TODOWNLOAD = np.array([])
 for i in range(len(array3)):
 	AVAILABLE=0
+
+	# Check if coordinates were already downloaded.
 	for j in range(len(OLDPOINTINGS)):
 		if np.array_equal(array3[i], OLDPOINTINGS[j]):
 			AVAILABLE=1
+
+	# If the coordinates have not been downloaded yet, check if they are already in the to-download-list.
+	if AVAILABLE == 0:
+		for k in range(len(TODOWNLOAD.reshape((-1,4)))):
+			if np.array_equal(array3[i], TODOWNLOAD.reshape((-1,4))[k]):
+				AVAILABLE=1
+
 	if AVAILABLE == 0:
 		TODOWNLOAD = np.append(TODOWNLOAD, array3[i])
+
+
 TODOWNLOAD2 = TODOWNLOAD.reshape((-1,4))
 print(str(len(array3)-len(TODOWNLOAD2)) + "/" + str(len(array3)) + " unique coordinates are already downloaded.\n")
 np.savetxt(PWD + "/old_coordinates.csv", (np.append(OLDPOINTINGS, TODOWNLOAD2)).reshape((-1,4)), delimiter=" ")
 if len(TODOWNLOAD2) == 0:
 	print("No new coordinates found for downloading. Exiting!")
 	exit()
+
 print("Downloading " + str(len(TODOWNLOAD2)) + " new coordinates...\n")
 
 # Calculating rectangle
-SIZE = np.array(len(array3)*[-FOVX/2.0, FOVX/2.0, -FOVY/2.0, FOVY/2.0])
+SIZE = np.array(len(TODOWNLOAD2)*[-FOVX/2.0, FOVX/2.0, -FOVY/2.0, FOVY/2.0])
 SIZE2 = SIZE.reshape((-1,4))
 
 array4 = TODOWNLOAD2+SIZE2
@@ -219,7 +232,13 @@ for i in range(len(ENTRIES)):
     config.write("#\n")
 config.close()
 
-os.popen("cat " + PWD + "/catalog_*.csv > " + PWD + "/catalog.tmp")
+
+if os.path.exists (PWD + "/" + CATALOG + "_raw.asc"):
+	os.popen("cat " + PWD + "/" + CATALOG + "_raw.asc > " + PWD + "/catalog.tmp")
+else:
+	print("No old catalog available.")
+os.popen("cat " + PWD + "/catalog_*.csv >> " + PWD + "/catalog.tmp")
+
 print("Getting rid of doubled objects...")
 
 os.popen("awk '{if (a[$0]==0) {a[$0]=1; print}}' " + PWD + "/catalog.tmp | sed -ne '/^[[:digit:]]/p' | awk '{print $0, 'SDSSDR9'}' > " + PWD + "/catalog.tmp2")
@@ -280,6 +299,14 @@ for i in range(len(ASCII)-2):
   ASCII2 = str(ASCII2 + " " + ASCII[i+2])
 os.popen(P_LDACTOASC + " -s -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k " + str(ASCII2[::]) + " > " + PWD + "/" + CATALOG + ".asc")
 
+compressed = gzip.open(PWD + "/" + CATALOG + ".asc.gz", "wb")
+os.popen(P_LDACTOASC + " -s -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k " + str(ASCII2[::]) + " > " + PWD + "/" + CATALOG + ".asc")
+data = open(PWD + "/" + CATALOG + ".asc","r")
+data1 = [i for i in data.readlines()]
+for i in range(len(data1)):
+  compressed.write(data1[i])
+compressed.close()
+
 
 # Create DS9 region file with circles with a radius of 50 pixels.
 f = open(PWD + "/" + CATALOG + ".reg", "w")
@@ -289,22 +316,12 @@ f.write("fk5\n")
 f.close()
 os.popen(P_LDACTOASC + " -b -i " + PWD + "/" + CATALOG + ".cat -t STDTAB -k Ra Dec | awk '{print \"circle(\" $1 \",\" $2 \",50i)\"}' >> " + PWD + "/" + CATALOG + ".reg")
 
-
-# Now create one single compressed gzip file from all raw catalog datasets.
-compressed = gzip.open(PWD + "/" + CATALOG + "_raw.gz", "wb")
-for i in range(len(array4)):
-  f = open(PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1]) + "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv", "r")
-  f1 = [i for i in f.readlines()]
-  for i in range(len(f1)):
-    compressed.write(f1[i])
-  f.close()
-compressed.close()
+os.rename(PWD + "/catalog.tmp", PWD + "/" + CATALOG + "_raw.asc")
 
 # Remove temp files.
-os.remove(PWD + "/catalog.tmp")
 os.remove(PWD + "/catalog.tmp2")
 os.remove(PWD + "/catalog.tmp3")
 os.remove(PWD + "/catalog.tmp4")
 os.remove(PWD + "/asctoldac_tmp.conf")
-for i in range(len(array4)):
+for i in range(len(TODOWNLOAD2)):
   os.remove(PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1]) + "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv")
