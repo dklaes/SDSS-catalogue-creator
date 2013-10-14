@@ -11,6 +11,8 @@ In the newest version the catalog can be chosen in the command line argument. At
 
 	- SDSS-DR9
 
+	- SDSS-DR10
+
 	- STRIPE82
 
 
