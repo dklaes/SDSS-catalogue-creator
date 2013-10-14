@@ -11,12 +11,10 @@
 # ----------------------------------------------------------------
 
 # $1	main directory of runs
-# $2	type of files (STANDARD, SCIENCE or SCIENCESHORT)
-# $3	directory where to save catalogue
-# $4	name of the final catalog
-# $5	filter
-# $6	camera
-# $7	Reference catalog (at the moment: SDSSDR8, SDSSDR9, SDSSDR10, STRIPE82)
+# $2	directory where to save catalogue
+# $3	name of the final catalog
+# $4	camera
+# $5	Reference catalog (at the moment: SDSSDR8, SDSSDR9, SDSSDR10, STRIPE82)
 
 # Importing packages
 from __future__ import print_function
@@ -48,17 +46,14 @@ for i in range(len(PROGS)):
 
 # Reading command line arguments
 PATH = sys.argv[1]
-#TYPES = sys.argv[2]
-TYPES = ['STANDARD']
-SAVETOPATH = sys.argv[3]
-CATALOG = sys.argv[4]
-#FILTER = sys.argv[5]
-#FILTERS = ['r_SDSS', 'g_SDSS', 'u_SDSS', 'i_SDSS', 'z_SDSS']
-FILTERS = ['r_SDSS']
-#CAMERA = sys.argv[6]
-CAMERA = 'OMEGACAM@VST'
-#REFCAT = sys.argv[7]
-REFCAT = 'SDSSDR10'
+TYPES = ['STANDARD', 'SCIENCE', 'SCIENCESHORT']
+SAVETOPATH = sys.argv[2]
+CATALOG = sys.argv[3]
+FILTERS = ['r_SDSS', 'g_SDSS', 'u_SDSS', 'i_SDSS', 'z_SDSS']
+CAMERA = sys.argv[4]
+#CAMERA = 'OMEGACAM@VST'
+REFCAT = sys.argv[5]
+#REFCAT = 'SDSSDR10'
 
 # Some configuration
 GETSDSS="/vol/science01/scratch/dklaes/data/SDSSR9_query/SDSSR7_objects.py"
@@ -89,23 +84,25 @@ array = []
 FAIL = 0
 FAILFILES = ""
 for i in range(len(FILTERS)):
-  os.chdir(PATH + "/" + FILTERS[i])
-  LIST = os.listdir(os.getcwd())
-  
-  for j in range(len(LIST)):
-    print("Getting coordinates from filter " + FILTERS[i] + " in directory " + LIST[j] + "...", end='\r')
-    
-    for k in range(len(TYPES)):
-      os.chdir(os.getcwd() + "/" + LIST[j] + "/" + TYPES[k] + "_" + FILTERS[i] + "/ORIGINALS/")
-      FILES = os.listdir(os.getcwd())
-      
-      for l in range(len(FILES)):
-	if os.path.exists(os.getcwd() + "/" + FILES[l]):
-	  array.append(os.getcwd() + "/" + FILES[l])
-	else:
-	  FAIL = FAIL + 1
-	  FAILFILES = str(FAILFILES + "\n" + os.getcwd() + "/" + FILES[l])
-      os.chdir(PATH + "/" + FILTERS[i])
+  if os.path.isdir(PATH + "/" + FILTERS[i]):
+	  os.chdir(PATH + "/" + FILTERS[i])
+	  LIST = os.listdir(os.getcwd())
+	  
+	  for j in range(len(LIST)):
+	    print("Getting coordinates from filter " + FILTERS[i] + " in directory " + LIST[j] + "...", end='\r')
+	    
+	    for k in range(len(TYPES)):
+	      if os.path.isdir(os.getcwd() + "/" + LIST[j] + "/" + TYPES[k] + "_" + FILTERS[i] + "/ORIGINALS/"):
+		      os.chdir(os.getcwd() + "/" + LIST[j] + "/" + TYPES[k] + "_" + FILTERS[i] + "/ORIGINALS/")
+		      FILES = os.listdir(os.getcwd())
+		      
+		      for l in range(len(FILES)):
+			if os.path.exists(os.getcwd() + "/" + FILES[l]):
+			  array.append(os.getcwd() + "/" + FILES[l])
+			else:
+			  FAIL = FAIL + 1
+			  FAILFILES = str(FAILFILES + "\n" + os.getcwd() + "/" + FILES[l])
+		      os.chdir(PATH + "/" + FILTERS[i])
 print(" "*200,end='\r')
 if len(array) == 1:
   if FAIL == 1:
