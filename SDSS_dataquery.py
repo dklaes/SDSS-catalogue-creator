@@ -74,10 +74,12 @@ ramax = float(sys.argv[4])
 decmin = float(sys.argv[5])
 decmax = float(sys.argv[6])
 
-if catalog == "DR8":
+if catalog == "SDSSDR8":
     public_url='http://skyserver.sdss3.org/dr8/en/tools/search/x_sql.asp'
-elif catalog == "DR9":
+elif catalog == "SDSSDR9":
     public_url='http://skyserver.sdss3.org/dr9/en/tools/search/x_sql.asp'
+elif catalog == "SDSSDR10":
+    public_url='http://skyserver.sdss3.org/dr10/en/tools/search/x_sql.aspx'
 elif catalog == "STRIPE82":
     public_url='http://cas.sdss.org/public/en/tools/search/x_sql.asp'
 
@@ -136,7 +138,14 @@ if len(lines) == 8:
     print "the selected area is too large"
     sys.exit(1)
 
-columns = lines[0][:-1].split(',')
+# This became necessary due to a change in SDSS!
+if catalog == "SDSSDR10":
+	START=2
+	columns = lines[1][:-1].split(',')
+else:
+	START=1
+	columns = lines[0][:-1].split(',')
+
 data = []
 
 # print query results:
@@ -146,7 +155,8 @@ print "# script call: %s %s %s %s %s %s" % (sys.argv[0], sys.argv[1],
 print "#"
 
 
-for line in range(1,len(lines[1:])+1):
+
+for line in range(START,len(lines[1:])+1):
     dt0 = {}
     for j in range(len(lines[line][:-1].split(','))):
         dt0[columns[j]] = lines[line][:-1].split(',')[j]
@@ -201,6 +211,3 @@ for i in range(0, len(data)):
               data[i]['modelMag_i'], data[i]['modelMagErr_i'], \
               data[i]['modelMag_z'], data[i]['modelMagErr_z'], \
               data[i]['z'], data[i]['zErr'], data[i]['zWarning']
-
-
-        

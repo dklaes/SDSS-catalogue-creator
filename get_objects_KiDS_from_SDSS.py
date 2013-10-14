@@ -16,6 +16,7 @@
 # $4	name of the final catalog
 # $5	filter
 # $6	camera
+# $7	Reference catalog (at the moment: SDSSDR8, SDSSDR9, SDSSDR10, STRIPE82)
 
 # Importing packages
 from __future__ import print_function
@@ -56,6 +57,8 @@ CATALOG = sys.argv[4]
 FILTERS = ['r_SDSS']
 #CAMERA = sys.argv[6]
 CAMERA = 'OMEGACAM@VST'
+#REFCAT = sys.argv[7]
+REFCAT = 'SDSSDR10'
 
 # Some configuration
 GETSDSS="/vol/science01/scratch/dklaes/data/SDSSR9_query/SDSSR7_objects.py"
@@ -179,7 +182,7 @@ for i in range(len(array3)):
 
 TODOWNLOAD2 = TODOWNLOAD.reshape((-1,4))
 print(str(len(array3)-len(TODOWNLOAD2)) + "/" + str(len(array3)) + " unique coordinates are already downloaded.\n")
-np.savetxt(PWD + "/old_coordinates.csv", (np.append(OLDPOINTINGS, TODOWNLOAD2)).reshape((-1,4)), delimiter=" ")
+
 if len(TODOWNLOAD2) == 0:
 	print("No new coordinates found for downloading. Exiting!")
 	exit()
@@ -206,10 +209,12 @@ for i in range(len(array4)):
   if array4[i][1] > 360.0:
     array4[i][1] = array4[i][1] - 360.0
 
+np.savetxt(PWD + "/old_coordinates.csv", (np.append(OLDPOINTINGS, array4)).reshape((-1,4)), delimiter=" ")
+
 # Downloading catalogs
 for i in range(len(array4)):
   print("Downloading area " + "{:5.0f}".format(i+1) + "/" + str(len(array4)) + " (RA: " + "{:11.6f}".format(array4[i][0]) + " -> " + "{:11.6f}".format(array4[i][1]) + "; DEC: " + "{:11.6f}".format(array4[i][2]) + " -> " + "{:11.6f}".format(array4[i][3]) + ")...", end='\r')
-  os.popen("python " + PWD + "/SDSS_dataquery.py DR8 STARS " + str(array4[i][0]) + " " + str(array4[i][1]) + " " + str(array4[i][2]) + " " + str(array4[i][3]) + " > " + PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1])+ "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv")
+  os.popen("python " + PWD + "/SDSS_dataquery.py " + REFCAT + " STARS " + str(array4[i][0]) + " " + str(array4[i][1]) + " " + str(array4[i][2]) + " " + str(array4[i][3]) + " > " + PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1])+ "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv")
   time.sleep(1)
 print(" "*200,end='\r')
 print("Download complete. Got " + str(len(array4)) + " areas.\n")
@@ -241,7 +246,7 @@ os.popen("cat " + PWD + "/catalog_*.csv >> " + PWD + "/catalog.tmp")
 
 print("Getting rid of doubled objects...")
 
-os.popen("awk '{if (a[$0]==0) {a[$0]=1; print}}' " + PWD + "/catalog.tmp | sed -ne '/^[[:digit:]]/p' | awk '{print $0, 'SDSSDR9'}' > " + PWD + "/catalog.tmp2")
+os.popen("awk '{if (a[$0]==0) {a[$0]=1; print}}' " + PWD + "/catalog.tmp | sed -ne '/^[[:digit:]]/p' | awk '{print $0, '" + REFCAT + "'}' > " + PWD + "/catalog.tmp2")
 
 print("Converting asc to ldac...")
 os.popen(P_ASCTOLDAC + " -i " + PWD + "/catalog.tmp2 -o " + PWD + "/catalog.tmp3 -c " + PWD + "/asctoldac_tmp.conf -t STDTAB -b 1 -n 'sdss ldac cat'")
