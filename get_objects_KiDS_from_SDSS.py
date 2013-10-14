@@ -5,8 +5,8 @@
 # ----------------------------------------------------------------
 # File Name:           get_objects_KiDS_from_SDSS.py
 # Author:              Dominik Klaes (dklaes@astro.uni-bonn.de)
-# Last modified on:    28.06.2013
-# Version:		V1.0
+# Last modified on:    14.10.2013
+# Version:	       V1.2
 # Description:         Get objects for KiDS data from SDSS database
 # ----------------------------------------------------------------
 
