@@ -58,7 +58,7 @@ REFCAT = sys.argv[5]
 # Some configuration
 GETSDSS="/vol/science01/scratch/dklaes/data/SDSSR9_query/SDSSR7_objects.py"
 
-CAMERAS = np.loadtxt("cameras.ini", delimiter="\t", dtype={'names': ('THELI_name', 'RA_name', 'DEC_name', 'EXPTIME_name', 'FOV_x_deg', 'FOV_y_deg'), 'formats': ('S50', 'S10', 'S10', 'S10', 'S50', 'S50')})
+CAMERAS = np.loadtxt("cameras.ini", delimiter="\t", dtype={'names': ('THELI_name', 'RA_name', 'DEC_name', 'EXPTIME_name', 'OBJECT_name',  'DARK_name', 'FOV_x_deg', 'FOV_y_deg'), 'formats': ('S50', 'S10', 'S10', 'S10', 'S10', 'S10', 'S50', 'S50')})
 
 RA=''
 DEC=''
@@ -67,8 +67,10 @@ for i in range(len(CAMERAS)):
     RA = CAMERAS[i][1]
     DEC = CAMERAS[i][2]
     EXPTIME = CAMERAS[i][3]
-    FOVX = float(CAMERAS[i][4])
-    FOVY = float(CAMERAS[i][5])
+    OBJECT = CAMERAS[i][4]
+    DARK = CAMERAS[i][5]
+    FOVX = float(CAMERAS[i][6])
+    FOVY = float(CAMERAS[i][7])
 
 if RA == '':
   print("No RA keyword for " + CAMERA + " found!")
@@ -76,6 +78,8 @@ elif DEC == '':
   print("No DEC keyword for " + CAMERA + " found!")
 elif EXPTIME == '':
   print("No EXPTIME keyword for " + CAMERA + " found!")
+elif DARK == '':
+  print("No DARK keyword for " + CAMERA + " found!")
 elif FOVX == '':
   print("No field of view keyword in x direction for " + CAMERA + " found!")
 elif FOVY == '':
@@ -134,9 +138,13 @@ for i in range(len(array)):
 	if DEC in file[0].header:
 		if EXPTIME in file[0].header:
 			if float(file[0].header[EXPTIME]) > 0:
-				RAVAL = float(file[0].header[RA])
-				DECVAL = float(file[0].header[DEC])
-				array2 = np.append(array2,(RAVAL,RAVAL,DECVAL,DECVAL))
+				if file[0].header[OBJECT] != DARK:
+					RAVAL = float(file[0].header[RA])
+					DECVAL = float(file[0].header[DEC])
+					array2 = np.append(array2,(RAVAL,RAVAL,DECVAL,DECVAL))
+				else:
+					NOCOORDS = NOCOORDS + 1
+					NOCOORDSFILES = str(NOCOORDSFILES + "\n" + array[i] + " : Reason: Image is a DARK!")
 			else:
 				NOCOORDS = NOCOORDS + 1
 				NOCOORDSFILES = str(NOCOORDSFILES + "\n" + array[i] + " : Reason: EXPTIME argument is smaller or equal zero!")
