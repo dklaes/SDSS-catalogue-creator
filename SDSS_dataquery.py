@@ -17,8 +17,8 @@ DESCRIPTION:
     in decimal degrees) pairs.
     The first argument determines which objects to retrieve from where:
 
-    - CATALOG: Choosing where to get the data from. Up to now SDSS-DR8,
-               SDSS-DR9 and STRIPE82 are supported.
+    - CATALOG: Choosing where to get the data from. Up to now SDSSDR8,
+               SDSSDR9, SDSSDR10 and STRIPE82 are supported.
     - STARS: stellar sources; retrieved are objectID, Ra, Dec, 
              Ra Error, Dec Error, PSF Magnitudes and errors in u, g, r, i, z
     - GALZ: galaxies with spectroscopic redshifts; retrieved are:
