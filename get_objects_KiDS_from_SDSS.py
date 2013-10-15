@@ -136,7 +136,7 @@ array2 = np.array([])
 NOCOORDS = 0
 NOCOORDSFILES = ""
 for i in range(len(array)):
-  print("Grepping coordinates " + "{:7.0f}".format(i+1) + "/" + str(len(array)) + " ({:2.2f}".format(float(i)/float(len(array))*100) + "%) ...", end='\r')
+  print("Grepping coordinates " + "{:7.0f}".format(i+1) + "/" + str(len(array)) + " ({:2.2f}".format(float(i)/float(len(array))*100) + "%)...", end='\r')
   file = fits.open(array[i])
 
   # Check if header keywords exist in files.
@@ -249,7 +249,7 @@ np.savetxt(PWD + "/old_coordinates.csv", (np.append(OLDPOINTINGS, array4)).resha
 
 # Downloading catalogs
 for i in range(len(array4)):
-  print("Downloading area " + "{:5.0f}".format(i+1) + "/" + str(len(array4)) + " (RA: " + "{:11.6f}".format(array4[i][0]) + " -> " + "{:11.6f}".format(array4[i][1]) + "; DEC: " + "{:11.6f}".format(array4[i][2]) + " -> " + "{:11.6f}".format(array4[i][3]) + ")...", end='\r')
+  print("Downloading area " + "{:7.0f}".format(i+1) + "/" + str(len(array4)) + " ({:2.2f}".format(float(i)/float(len(array4))*100) + "%) (RA: " + "{:10.6f}".format(array4[i][0]) + " -> " + "{:10.6f}".format(array4[i][1]) + "; DEC: " + "{:10.6f}".format(array4[i][2]) + " -> " + "{:10.6f}".format(array4[i][3]) + ")...", end='\r')
   os.popen("python " + PWD + "/SDSS_dataquery.py " + REFCAT + " STARS " + str(array4[i][0]) + " " + str(array4[i][1]) + " " + str(array4[i][2]) + " " + str(array4[i][3]) + " > " + PWD + "/catalog_" + str(array4[i][0]) + "_" + str(array4[i][1])+ "_" + str(array4[i][2]) + "_" + str(array4[i][3]) + ".csv")
   time.sleep(1)
 print(" "*200,end='\r')
