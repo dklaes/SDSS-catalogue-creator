@@ -136,7 +136,7 @@ array2 = np.array([])
 NOCOORDS = 0
 NOCOORDSFILES = ""
 for i in range(len(array)):
-  print("Grepping coordinates " + "{:5.0f}".format(i+1) + "/" + str(len(array)) + "...", end='\r')
+  print("Grepping coordinates " + "{:7.0f}".format(i+1) + "/" + str(len(array)) + " ({:2.2f}".format(float(i)/float(len(array))*100) + "%) ...", end='\r')
   file = fits.open(array[i])
 
   # Check if header keywords exist in files.
