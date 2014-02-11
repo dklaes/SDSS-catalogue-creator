@@ -82,7 +82,9 @@ elif catalog == "SDSSDR10":
     public_url='http://skyserver.sdss3.org/dr10/en/tools/search/x_sql.aspx'
 elif catalog == "STRIPE82":
     public_url='http://cas.sdss.org/public/en/tools/search/x_sql.asp'
-
+else:
+    print("Catalog not supported.")
+    sys.exit(1)
 
 # define the SQL query string for the SDSS database; dependent
 # on the required object types:
