@@ -43,7 +43,7 @@ REMARKS:
     - The script is for Python 2.x!
 
 EXAMPLES:
-    ./SDSS_dataquery.py DR9 STARS 212.0 213.0 51.0 52.0
+    ./SDSS_dataquery.py SDSSDR9 STARS 212.0 213.0 51.0 52.0
 
     This command retrieves stellar sources in the one square degree
     area around ra=212.5, dec=51.5 from SDSS-DR9.
